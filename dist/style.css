@@ -1,0 +1,46 @@
+body{
+    margin: 0px;
+    padding: 0px;
+    background: -webkit-linear-gradient(45deg, rgb(17, 39, 75), rgb(75, 12, 12));
+    background: -moz-linear-gradient(45deg, rgb(17, 39, 75), rgb(75, 12, 12));
+    background: linear-gradient(45deg, rgb(17, 39, 75), rgb(75, 12, 12));
+}
+
+#header{
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 7vh;
+}
+
+.text{
+    width: 30vw;
+    color: aliceblue;
+    background-color: #23292e;
+    border: none;
+}
+
+#start{
+    color: aliceblue;
+    background-color: #ffa13d;
+    border: none;
+    padding: 15px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 15px;
+}
+
+.block{
+    height: 93vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#glCanvas{
+    background-color: red;
+    width: 80vw;
+    height: 80vh;
+    border-radius: 15px;
+}
