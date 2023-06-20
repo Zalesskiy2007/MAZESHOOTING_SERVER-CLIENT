@@ -2,8 +2,6 @@ import { io } from "socket.io-client";
 import { main } from "./src/main.js";
 
 const socket = io();
-let player = null;
-let otherPlayers = null;
 
 async function mainClient() {
   // client-side
@@ -13,23 +11,20 @@ async function mainClient() {
 
   socket.on("MFS:Other_Players", function(msg) {
     let tmpPlayers = msg.split('|');
-    otherPlayers = [];
+    window.otherPlayers = [];
     
     for (let i = 0; i < tmpPlayers.length; i++) {
       if (tmpPlayers[i] !== "") {
-        otherPlayers.push(JSON.parse(tmpPlayers[i]));
+        window.otherPlayers.push(JSON.parse(tmpPlayers[i]));
       }
     }
-    console.log(`-------Other-------`);
-    console.log(msg + `::${otherPlayers.length}`);
-    console.log(`-------------------`);
+
+    console.log("Other: " + msg);
   });
 
   socket.on("MFS:Get_Player", function(msg) {
-    player = JSON.parse(msg);
-    console.log(`*********Player*********`);
-    console.log(msg);
-    console.log(`************************`);
+    window.player = JSON.parse(msg);
+    console.log("Player: " + msg);
   });
 
   socket.on("disconnect", () => {
@@ -38,7 +33,7 @@ async function mainClient() {
 
   //CREATE PLAYER
   document.getElementById("start").onclick = () => {
-    if (player === null) {
+    if (window.player === null) {
       let playerName = document.getElementById("playerName").value;
       let playerRoom = document.getElementById("room").value;
 
@@ -48,17 +43,28 @@ async function mainClient() {
 
   //TEST CONTROL
   document.addEventListener('keydown', (ev) => {
-    if (ev.code == 'KeyW') {
-      player.y += 1;
-      socket.emit("MTS:Change_Player_State", JSON.stringify(player));
-    } else if (ev.code == 'KeyS') {
-      player.y -= 1;
-      socket.emit("MTS:Change_Player_State", JSON.stringify(player));
+    if (window.player !== null) {
+      if (ev.code == 'KeyW') {
+        window.player.z -= 1;
+        socket.emit("MTS:Change_Player_State", JSON.stringify(window.player));
+      } else if (ev.code == 'KeyS') {
+        window.player.z += 1;
+        socket.emit("MTS:Change_Player_State", JSON.stringify(window.player));
+      } else if (ev.code == 'KeyD') {
+        window.player.x += 1;
+        socket.emit("MTS:Change_Player_State", JSON.stringify(window.player));
+      } else if (ev.code == 'KeyA') {
+        window.player.x -= 1;
+        socket.emit("MTS:Change_Player_State", JSON.stringify(window.player));
+      }
     }
   });
 }
 
 window.addEventListener("load", (event) => {
+  window.player = null;
+  window.otherPlayers = null;
+
   mainClient();
   main();
 });

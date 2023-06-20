@@ -86,7 +86,7 @@ class _camera {
 
   // Camera set default values function.
   setDef() {
-    this.loc.set(5.3, 5.3, 5.3);
+    this.loc.set(0, 15.3, 15.3);
     this.at.set(0, 0, 0);
     this.dir.set(0, 0, -1);
     this.up.set(0, 1, 0);

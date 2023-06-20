@@ -5,10 +5,9 @@ import * as mtl from "./res/material.js"
 // import * as rnd from "./render.js"
 import { gl } from "../../gl.js";
 
-
 // Primitive class
 class _prim {
-  constructor(type, vertexArray, indexArray, mtlNo) {
+  constructor(type, vertexArray, indexArray, mtlNo, socketId) {
     if (vertexArray != null) {
       // Generate and bind vertex buffer
       this.vBuf = gl.createBuffer();
@@ -52,6 +51,7 @@ class _prim {
     if (type != null) {
       this.mtlNo = mtlNo;
       this.type = type;
+      this.id = socketId;
     }
   }
 
@@ -157,7 +157,8 @@ class _prim {
       gl.TRIANGLES,
       toArray(vertexArray),
       indexArray,
-      this.mtlNo
+      this.mtlNo,
+      this.id
     );
   }
 
@@ -210,7 +211,8 @@ class _prim {
       gl.TRIANGLES,
       toArray(vertexArray),
       indexArray,
-      this.mtlNo
+      this.mtlNo,
+      this.id
     );
   }
 }

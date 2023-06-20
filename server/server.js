@@ -101,8 +101,6 @@ function deletePlayer(id) {
 }
 
 
-
-
 io.on("connection", (socket) => {
   console.log(`Client connected with id: ${socket.id}`);
   onLine++;
@@ -114,7 +112,6 @@ io.on("connection", (socket) => {
     playerConnect.socket.emit("MFS:Get_Player", playerJSON(playerConnect));
     reloadOtherPlayers();
   });
-
 
   socket.on("MTS:Change_Player_State", (msg) => {
     let g = JSON.parse(msg);
