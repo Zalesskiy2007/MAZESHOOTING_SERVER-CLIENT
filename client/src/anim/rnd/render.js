@@ -5,6 +5,7 @@ import * as tex from "./res/texture.js";
 import * as shd from "./res/shader.js";
 import { prim } from "./primitive.js";
 import { mat4 } from "../../mth/mth.js";
+import { vec3 } from "../../mth/mth.js";
 import { gl } from "../../gl.js"
 // import { player, otherPlayers } from "../../../client.js";
 
@@ -112,12 +113,32 @@ export class Render {
     }
   }
 
+  latentCamera() {
+    if (window.player != null) {
+      let pos = vec3(window.player.x, window.player.y, window.player.z);
+      let dir = vec3(0, 0, -1).normalize();
+      let norm = vec3(0, 1, 0);
+      let camOld = vec3(window.anim.camera.loc);
+      let camNew = pos.add(dir.mul(-18).add(norm.mul(8)));
+      window.anim.camera.set(
+        camOld.add(
+          camNew.sub(camOld).mul(Math.sqrt(window.anim.timer.globalDeltaTime))
+        ),
+        pos.add(dir.mul(18)).add(norm.mul(-8)),
+        norm
+      );
+    }
+  }
+
   render() {
     gl.clearColor(0.3, 0.47, 0.8, 1);
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.enable(gl.DEPTH_TEST);
 
     this.createSelfIfNotExists();
+
+    this.latentCamera();
+
     this.updatePlayers();
     this.drawSelf();
     this.drawOther();

@@ -1,7 +1,7 @@
 // Primitives handle module
 import { mat4, vec3, vec2, vec4 } from "../../mth/mth.js";
 import { vertex, toArray, autoNormals } from "./vertex.js";
-import * as mtl from "./res/material.js"
+import * as mtl from "./res/material.js";
 // import * as rnd from "./render.js"
 import { gl } from "../../gl.js";
 
@@ -93,15 +93,19 @@ class _prim {
     if ((loc = gl.getUniformLocation(progId, "Time")) != -1)
       gl.uniform1f(loc, window.anim.timer.globalTime);
 
+    // Pass camera data
+    if ((loc = gl.getUniformLocation(progId, "CamLoc")) != -1)
+      gl.uniform3f(
+        loc,
+        window.anim.camera.loc.x,
+        window.anim.camera.loc.y,
+        window.anim.camera.loc.z
+      );
+
     gl.bindVertexArray(this.vA);
     if (this.iBuf != undefined) {
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.iBuf);
-      gl.drawElements(
-        this.type,
-        this.numOfElements,
-        gl.UNSIGNED_INT,
-        0
-      );
+      gl.drawElements(this.type, this.numOfElements, gl.UNSIGNED_INT, 0);
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
     } else gl.drawArrays(this.type, 0, this.numOfElements);
 

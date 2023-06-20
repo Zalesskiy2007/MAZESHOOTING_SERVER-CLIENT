@@ -15,6 +15,7 @@ export function main() {
     window.anim.render.resInit();
 
     const draw = () => {
+      window.anim.response();
       window.anim.draw();
       window.requestAnimationFrame(draw);
     };

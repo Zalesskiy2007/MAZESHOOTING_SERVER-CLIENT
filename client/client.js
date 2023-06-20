@@ -1,7 +1,8 @@
 import { io } from "socket.io-client";
 import { main } from "./src/main.js";
 
-const socket = io();
+window.socket = io();
+window.activeButtons = [];
 
 function addInfoBlock() {
   let block = document.getElementById("wrap");
@@ -28,11 +29,11 @@ function addInfoBlock() {
 
 async function mainClient() {
   // client-side
-  socket.on("connect", () => {
-    console.log(socket.id); // x8WIv7-mJelg7on_ALbx
+  window.socket.on("connect", () => {
+    console.log(window.socket.id); // x8WIv7-mJelg7on_ALbx
   });
 
-  socket.on("MFS:Other_Players", function(msg) {
+  window.socket.on("MFS:Other_Players", function(msg) {
     let tmpPlayers = msg.split('|');
     window.otherPlayers = [];
     
@@ -45,14 +46,14 @@ async function mainClient() {
     console.log("Other: " + msg);
   });
 
-  socket.on("MFS:Get_Player", function(msg) {
+  window.socket.on("MFS:Get_Player", function(msg) {
     window.player = JSON.parse(msg);
     addInfoBlock();
     console.log("Player: " + msg);
   });
 
-  socket.on("disconnect", () => {
-    console.log(socket.id); // undefined
+  window.socket.on("disconnect", () => {
+    console.log(window.socket.id); // undefined
   });
 
   //CREATE PLAYER
@@ -63,7 +64,7 @@ async function mainClient() {
       let title = document.getElementById("roomShow");
 
       if (playerName !== "" && playerRoom !== "") {
-        socket.emit("MTS:Player_Settings", [playerName, playerRoom].join('|'));
+        window.socket.emit("MTS:Player_Settings", [playerName, playerRoom].join('|'));
         title.innerText = `Your room is '${playerRoom}'`;
         title.style.color = "aliceblue";
         title.style.fontStyle = "normal";
@@ -80,23 +81,15 @@ async function mainClient() {
     }
   }
 
-  //TEST CONTROL
-  document.addEventListener('keydown', (ev) => {
-    if (window.player !== null) {
-      if (ev.code == 'KeyW') {
-        window.player.z -= 1;
-        socket.emit("MTS:Change_Player_State", JSON.stringify(window.player));
-      } else if (ev.code == 'KeyS') {
-        window.player.z += 1;
-        socket.emit("MTS:Change_Player_State", JSON.stringify(window.player));
-      } else if (ev.code == 'KeyD') {
-        window.player.x += 1;
-        socket.emit("MTS:Change_Player_State", JSON.stringify(window.player));
-      } else if (ev.code == 'KeyA') {
-        window.player.x -= 1;
-        socket.emit("MTS:Change_Player_State", JSON.stringify(window.player));
-      }
-    }
+  
+  document.addEventListener("keydown", function (event) {
+    if (!window.activeButtons.includes(event.code))
+      window.activeButtons.push(event.code);
+  });
+
+  document.addEventListener("keyup", function (event) {
+    if (activeButtons.includes(event.code))
+      window.activeButtons.splice(window.activeButtons.indexOf(event.code), 1);
   });
 }
 
