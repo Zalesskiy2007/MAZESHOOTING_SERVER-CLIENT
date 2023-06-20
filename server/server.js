@@ -13,6 +13,7 @@ const io = new Server(server);
 
 let players = [];
 let onLine = 0;
+let colors = ["red", "green", "blue", "orange", "yellow"];
 
 class _Player {
   constructor(name, x, y, z, health, damage, color, sock, room) {
@@ -107,7 +108,7 @@ io.on("connection", (socket) => {
 
   socket.on("MTS:Player_Settings", (msg) => {
     msg = msg.split('|');
-    let playerConnect = Player(msg[0], 0, 0, 0, 100, 1, "red", socket, msg[1]);
+    let playerConnect = Player(msg[0], 0, 0, 0, 100, 1, colors[Math.floor(Math.random() * colors.length)], socket, msg[1]);
     players.push(playerConnect);
     playerConnect.socket.emit("MFS:Get_Player", playerJSON(playerConnect));
     reloadOtherPlayers();
@@ -133,6 +134,11 @@ io.on("connection", (socket) => {
 
     reloadPlayer(gang[0]);
     reloadPlayer(gang[1]);
+    reloadOtherPlayers();
+  });
+
+  socket.on("MTS:Delete_Player", () => {
+    deletePlayer(socket.id);
     reloadOtherPlayers();
   });
 

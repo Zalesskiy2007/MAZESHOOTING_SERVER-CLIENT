@@ -9,7 +9,7 @@ function addInfoBlock() {
 
   if (window.otherPlayers !== null) {
   block.insertAdjacentHTML("beforeend", `<div class="person" style="background-color: black;">
-                                            <div class="pers-color"></div>
+                                            <div class="pers-color" style="background-color: ${window.player.color};"></div>
                                             <div class="pers-name">${window.player.name}</div>
                                             <div class="pers-stat">${window.player.health}/100</div>
                                          </div>`);
@@ -18,7 +18,7 @@ function addInfoBlock() {
   if (window.otherPlayers !== null) {
     for (let i = 0; i < window.otherPlayers.length; i++) {
       block.insertAdjacentHTML("beforeend", `<div class="person">
-                                              <div class="pers-color"></div>
+                                              <div class="pers-color" style="background-color: ${window.otherPlayers[i].color};"></div>
                                               <div class="pers-name">${window.otherPlayers[i].name}</div>
                                               <div class="pers-stat">${window.otherPlayers[i].health}/100</div>
                                           </div>`);
@@ -67,11 +67,16 @@ async function mainClient() {
         title.innerText = `Your room is '${playerRoom}'`;
         title.style.color = "aliceblue";
         title.style.fontStyle = "normal";
+        document.getElementById("start").value = "LEAVE";
+        document.getElementById("playerName").value = "";
+        document.getElementById("room").value = "";
       } else {
         title.innerText = `invalid room or player name`;
         title.style.color = "red";
         title.style.fontStyle = "italic";
       }
+    } else {
+      window.location.reload();
     }
   }
 
