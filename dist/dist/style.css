@@ -1,0 +1,117 @@
+body{
+    margin: 0px;
+    padding: 0px;
+    background: -webkit-linear-gradient(45deg, rgb(17, 39, 75), rgb(75, 12, 12));
+    background: -moz-linear-gradient(45deg, rgb(17, 39, 75), rgb(75, 12, 12));
+    background: linear-gradient(45deg, rgb(17, 39, 75), rgb(75, 12, 12));
+}
+
+#header{
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 7vh;
+}
+
+.text{
+    width: 30vw;
+    color: aliceblue;
+    background-color: #23292e;
+    border: none;
+    height: 50%;
+}
+
+#start{
+    color: aliceblue;
+    background-color: #ffa13d;
+    border: none;
+    padding: 15px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 15px;
+}
+
+.room-block{
+    height: 7vh;
+    color: aliceblue;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+}
+
+.block{
+    height: 86vh;
+    display: flex;
+    align-items: center;
+}
+
+.block-left{
+    display: flex;
+    width: 80vw;
+    height: 86vh;
+    align-items: center;
+    justify-content: center;
+}
+
+.block-right{
+    width: 20vw;
+    height: 80vh;
+    border-radius: 15px;
+}
+
+.person{
+    display: flex;
+    height: 5%;
+    border: #23292e solid 3px;
+    border-top: none;
+}
+
+.pers-color{
+    background-color: red;
+    width: 10%;
+    border-right: #23292e solid 3px;
+}
+.pers-name{
+    width: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: #23292e solid 3px;
+    color: aliceblue;
+}
+
+.pers-stat{
+    width: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    color: aliceblue;
+}
+
+.wrapper{
+    height: 93%;
+    background-color: #425054;
+    overflow: auto;
+    overflow-x: hidden;
+    border-radius: 0px 0px 15px 15px;
+}
+
+.title-info{
+    background-color: aliceblue;
+    height: 7%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px 15px 0px 0px;
+    color: black;
+    font-size: 30px;
+}
+
+#glCanvas{
+    background-color: red;
+    width: 75vw;
+    height: 80vh;
+    border-radius: 15px;
+}
