@@ -26,10 +26,12 @@ body{
     color: aliceblue;
     background-color: #ffa13d;
     border: none;
-    padding: 15px;
-    padding-left: 20px;
-    padding-right: 20px;
-    border-radius: 15px;
+    border-radius: 15%;
+    padding-top: 1.5vh;
+    padding-bottom: 1.5vh;
+    padding-left: 1vw;
+    padding-right: 1vw;
+    font-size: 2vh;
 }
 
 .room-block{
@@ -38,7 +40,8 @@ body{
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 50px;
+    font-size: 5vh;
+    overflow: hidden;
 }
 
 .block{
@@ -49,16 +52,18 @@ body{
 
 .block-left{
     display: flex;
-    width: 80vw;
+    width: 75vw;
     height: 86vh;
     align-items: center;
     justify-content: center;
 }
 
 .block-right{
-    width: 20vw;
+    width: 25vw;
     height: 80vh;
     border-radius: 15px;
+    display: flex;
+    justify-content: center;
 }
 
 .person{
@@ -66,6 +71,7 @@ body{
     height: 5%;
     border: #23292e solid 3px;
     border-top: none;
+    font-size: 2vh;
 }
 
 .pers-color{
@@ -83,6 +89,11 @@ body{
     overflow: hidden;
 }
 
+.block-right-content{
+    height: 100%;
+    width: 80%;
+}
+
 .pers-stat{
     width: 60%;
     display: flex;
@@ -95,9 +106,9 @@ body{
 .wrapper{
     height: 93%;
     background-color: #425054;
+    border-radius: 0px 0px 15px 15px;
     overflow: auto;
     overflow-x: hidden;
-    border-radius: 0px 0px 15px 15px;
 }
 
 .title-info{
@@ -108,12 +119,12 @@ body{
     justify-content: center;
     border-radius: 15px 15px 0px 0px;
     color: black;
-    font-size: 30px;
+    font-size: 3vh;
 }
 
 #glCanvas{
     background-color: red;
-    width: 75vw;
+    width: 93%;
     height: 80vh;
     border-radius: 15px;
 }

@@ -94,51 +94,51 @@ class _vec3 {
     // Transform point of vector function
     pointTransform(mat) {
         return vec3(
-            this.x * mat.a[0][0] +
-                this.y * mat.a[1][0] +
-                this.z * mat.a[2][0] +
-                mat.a[3][0],
-            this.x * mat.a[0][1] +
-                this.y * mat.a[1][1] +
-                this.z * mat.a[2][1] +
-                mat.a[3][1],
-            this.x * mat.a[0][2] +
-                this.y * mat.a[1][2] +
-                this.z * mat.a[2][2] +
-                mat.a[3][2]
+            this.x * mat.m[0][0] +
+                this.y * mat.m[1][0] +
+                this.z * mat.m[2][0] +
+                mat.m[3][0],
+            this.x * mat.m[0][1] +
+                this.y * mat.m[1][1] +
+                this.z * mat.m[2][1] +
+                mat.m[3][1],
+            this.x * mat.m[0][2] +
+                this.y * mat.m[1][2] +
+                this.z * mat.m[2][2] +
+                mat.m[3][2]
         );
     }
     // Vector transform function
     transform(mat) {
         return vec3(
-            this.x * mat.a[0][0] + this.y * mat.a[1][0] + this.z * mat.a[2][0],
-            this.x * mat.a[0][1] + this.y * mat.a[1][1] + this.z * mat.a[2][1],
-            this.x * mat.a[0][2] + this.y * mat.a[1][2] + this.z * mat.a[2][2]
+            this.x * mat.m[0][0] + this.y * mat.m[1][0] + this.z * mat.m[2][0],
+            this.x * mat.m[0][1] + this.y * mat.m[1][1] + this.z * mat.m[2][1],
+            this.x * mat.m[0][2] + this.y * mat.m[1][2] + this.z * mat.m[2][2]
         );
     }
     // Vector by matrix multiplication function
     mulMatr(mat) {
         let w =
-            this.x * mat.a[0][3] +
-            this.y * mat.a[1][3] +
-            this.z * mat.a[2][3] +
-            mat.a[3][3];
+            this.x * mat.m[0][3] +
+            this.y * mat.m[1][3] +
+            this.z * mat.m[2][3] +
+            mat.m[3][3];
 
         return vec3(
-            (this.x * mat.a[0][0] +
-                this.y * mat.a[1][0] +
-                this.z * mat.a[2][0] +
-                mat.a[3][0]) /
+            (this.x * mat.m[0][0] +
+                this.y * mat.m[1][0] +
+                this.z * mat.m[2][0] +
+                mat.m[3][0]) /
                 w,
-            (this.x * mat.a[0][1] +
-                this.y * mat.a[1][1] +
-                this.z * mat.a[2][1] +
-                mat.a[3][1]) /
+            (this.x * mat.m[0][1] +
+                this.y * mat.m[1][1] +
+                this.z * mat.m[2][1] +
+                mat.m[3][1]) /
                 w,
-            (this.x * mat.a[0][2] +
-                this.y * mat.a[1][2] +
-                this.z * mat.a[2][2] +
-                mat.a[3][2]) /
+            (this.x * mat.m[0][2] +
+                this.y * mat.m[1][2] +
+                this.z * mat.m[2][2] +
+                mat.m[3][2]) /
                 w
         );
     }

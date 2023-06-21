@@ -43,13 +43,13 @@ async function mainClient() {
       }
     }
     addInfoBlock();
-    console.log("Other: " + msg);
+    //console.log("Other: " + msg);
   });
 
   window.socket.on("MFS:Get_Player", function(msg) {
     window.player = JSON.parse(msg);
     addInfoBlock();
-    console.log("Player: " + msg);
+    //console.log("Player: " + msg);
   });
 
   window.socket.on("disconnect", () => {

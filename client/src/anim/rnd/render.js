@@ -93,8 +93,6 @@ export class Render {
             console.log("Anyone");
           }
         }
-
-        console.log(this.otherPrimitives);
       }
     }
   }
