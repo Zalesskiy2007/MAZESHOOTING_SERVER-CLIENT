@@ -43,13 +43,11 @@ async function mainClient() {
       }
     }
     addInfoBlock();
-    //console.log("Other: " + msg);
   });
 
   window.socket.on("MFS:Get_Player", function(msg) {
     window.player = JSON.parse(msg);
     addInfoBlock();
-    //console.log("Player: " + msg);
   });
 
   window.socket.on("MFS:Invalid_Name", (msg) => {

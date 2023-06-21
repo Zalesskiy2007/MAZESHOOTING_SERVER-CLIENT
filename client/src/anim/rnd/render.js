@@ -7,7 +7,7 @@ import { prim } from "./primitive.js";
 import { mat4 } from "../../mth/mth.js";
 import { vec3 } from "../../mth/mth.js";
 import { gl } from "../../gl.js"
-// import { player, otherPlayers } from "../../../client.js";
+
 
 export class Render {
   constructor() {
@@ -22,9 +22,11 @@ export class Render {
     this.texture = tex.texture();
     this.otherPrimitives = [];
 
+    mtl.loadMtlLib();
+
     if (window.otherPlayers !== null) {
       for (let i = 0; i < window.otherPlayers.length; i++) {
-        let tmpPrim = prim(gl.TRIANGLES, null, null, this.material.mtlNo, window.otherPlayers[i].id).createSphere(3, 102, 102);
+        let tmpPrim = prim(gl.TRIANGLES, null, null, mtl.findMtlByName(window.otherPlayers[i].color).mtlNo, window.otherPlayers[i].id).createSphere(3, 102, 102);
         this.otherPrimitives.push(tmpPrim);
       }
     }
@@ -32,7 +34,7 @@ export class Render {
 
   createSelfIfNotExists() {
     if (window.player !== null && this.playerPrimitive === undefined) {
-      this.playerPrimitive = prim(gl.TRIANGLES, null, null, this.material.mtlNo, window.player.id).createSphere(3, 102, 102);
+      this.playerPrimitive = prim(gl.TRIANGLES, null, null, mtl.findMtlByName(window.player.color).mtlNo, window.player.id).createSphere(3, 102, 102);
     }
   }
 
@@ -59,12 +61,12 @@ export class Render {
              }
           }
           if (flag === 0) {
-            names.push(window.otherPlayers[i].id);
+            names.push(window.otherPlayers[i]);
           }
         }
 
         for (let g = 0; g < names.length; g++) {
-          let tmpPr = prim(gl.TRIANGLES, null, null, this.material.mtlNo, names[g]).createSphere(3, 102, 102);
+          let tmpPr = prim(gl.TRIANGLES, null, null, mtl.findMtlByName(names[g].color).mtlNo, names[g].id).createSphere(3, 102, 102);
           this.otherPrimitives.push(tmpPr);
         }
       }
