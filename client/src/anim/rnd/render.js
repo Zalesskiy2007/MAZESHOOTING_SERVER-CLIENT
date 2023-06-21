@@ -15,26 +15,24 @@ export class Render {
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     this.shaderDefault = shd.shader("default");
-    this.playersCnt = 0;
   }
 
   resInit() {
     this.material = mtl.material();
     this.texture = tex.texture();
     this.otherPrimitives = [];
-    this.otherPrimId = [];
-    this.otherObjId = [];
 
     if (window.otherPlayers !== null) {
-      this.otherCnt = window.otherPlayers.length;
-    } else {
-      this.otherCnt = 0;
+      for (let i = 0; i < window.otherPlayers.length; i++) {
+        let tmpPrim = prim(gl.TRIANGLES, null, null, this.material.mtlNo, window.otherPlayers[i].id).createSphere(3, 102, 102);
+        this.otherPrimitives.push(tmpPrim);
+      }
     }
+  }
 
-    for (let i = 0; i < this.otherCnt; i++) {
-      let tmpPrim = prim(gl.TRIANGLES, null, null, this.material.mtlNo, window.otherPlayers[i].socketId).createSphere(3, 102, 102);
-      this.otherPrimitives.push(tmpPrim);
-      this.otherPrimId.push(tmpPrim.id);
+  createSelfIfNotExists() {
+    if (window.player !== null && this.playerPrimitive === undefined) {
+      this.playerPrimitive = prim(gl.TRIANGLES, null, null, this.material.mtlNo, window.player.id).createSphere(3, 102, 102);
     }
   }
 
@@ -47,51 +45,47 @@ export class Render {
     return -1;
   }
 
-  createSelfIfNotExists() {
-    if (window.player !== null && this.playerPrimitive === undefined) {
-      this.playerPrimitive = prim(gl.TRIANGLES, null, null, this.material.mtlNo, window.player.id).createSphere(3, 102, 102);
-    }
-  }
-
   updatePlayers() {
-    this.otherObjId = [];
     if (window.otherPlayers !== null) {
-      for (let i = 0; i < window.otherPlayers.length; i++) {
-        this.otherObjId.push(window.otherPlayers[i].id);
-      }
-        
       //add
-      if (this.otherCnt < window.otherPlayers.length) {
-        let difference = this.otherObjId.filter(x => !this.otherPrimId.includes(x));
+      if (this.otherPrimitives.length < window.otherPlayers.length) {
+        let names = [];
 
-        this.otherCnt += difference.length;
-        for (let g = 0; g < difference.length; g++) {
-          let tmpPr = prim(gl.TRIANGLES, null, null, this.material.mtlNo, difference[g]).createSphere(3, 102, 102);
+        for (let i = 0; i < window.otherPlayers.length; i++) {
+          let flag = 0;
+          for (let j = 0; j < this.otherPrimitives.length; j++) {
+             if (this.otherPrimitives[j].id === window.otherPlayers[i].id) {
+              flag = 1;
+             }
+          }
+          if (flag === 0) {
+            names.push(window.otherPlayers[i].id);
+          }
+        }
+
+        for (let g = 0; g < names.length; g++) {
+          let tmpPr = prim(gl.TRIANGLES, null, null, this.material.mtlNo, names[g]).createSphere(3, 102, 102);
           this.otherPrimitives.push(tmpPr);
-          this.otherPrimId.push(difference[g]);
         }
       }
 
       //delete
-      if (this.otherCnt > window.otherPlayers.length) {
-        let difference = this.otherPrimId.filter(x => !this.otherObjId.includes(x));
-        console.log(difference);
-
-        this.otherCnt -= difference.length;
-        for (let g = 0; g < difference.length; g++) {
-          console.log(this.getById(difference[g]));
-          let posPrim = this.otherPrimitives.indexOf(this.otherPrimitives[this.getById(difference[g])]);
-          let posId = this.otherPrimId.indexOf(difference[g]);
-          console.log("PosPrim:" + posPrim)
-
-          if (posPrim > -1) {
-            this.otherPrimitives.splice(posPrim, 1);
-            console.log("Hello");
+      if (this.otherPrimitives.length > window.otherPlayers.length) {
+        let buf = [];
+        for (let x = 0; x < this.otherPrimitives.length; x++) {
+          let flg = 0;
+          for (let y = 0; y < window.otherPlayers.length; y++) {
+            if (this.otherPrimitives[x].id === window.otherPlayers[y].id) {
+              flg = 1;
+            }
           }
-          if (posId > -1) {
-            this.otherPrimId.splice(posId, 1);
-            console.log("Anyone");
+          if (flg === 0) {
+            buf.push(x);
           }
+        }
+
+        for (let z = 0; z < buf.length; z++) {
+          this.otherPrimitives.splice(buf[z], 1);
         }
       }
     }
@@ -106,8 +100,10 @@ export class Render {
 
   drawOther() {
     // Draw other primitives
-    for (let i = 0; i < this.otherCnt; i++) {
-      this.otherPrimitives[this.getById(window.otherPlayers[i].id)].draw(mat4().setTranslate(window.otherPlayers[i].x, window.otherPlayers[i].y, window.otherPlayers[i].z))
+    if (window.otherPlayers !== null) {
+      for (let i = 0; i < window.otherPlayers.length; i++) {
+        this.otherPrimitives[this.getById(window.otherPlayers[i].id)].draw(mat4().setTranslate(window.otherPlayers[i].x, window.otherPlayers[i].y, window.otherPlayers[i].z));
+      }
     }
   }
 
