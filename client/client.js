@@ -52,6 +52,18 @@ async function mainClient() {
     //console.log("Player: " + msg);
   });
 
+  window.socket.on("MFS:Invalid_Name", (msg) => {
+    let title = document.getElementById("roomShow");
+    let mes = msg.split("|");
+
+    title.innerText = `this name had already taken`;
+    title.style.color = "red";
+    title.style.fontStyle = "italic";
+    document.getElementById("start").value = "GO!";
+    document.getElementById("playerName").value = mes[0];
+    document.getElementById("room").value = mes[1];
+  });
+
   window.socket.on("disconnect", () => {
     console.log(window.socket.id); // undefined
   });
@@ -63,7 +75,7 @@ async function mainClient() {
       let playerRoom = document.getElementById("room").value;
       let title = document.getElementById("roomShow");
 
-      if (playerName !== "" && playerRoom !== "") {
+      if (playerName !== "" && playerRoom !== "" && !playerName.includes(" ") && !playerRoom.includes(" ")) {
         window.socket.emit("MTS:Player_Settings", [playerName, playerRoom].join('|'));
         title.innerText = `Your room is '${playerRoom}'`;
         title.style.color = "aliceblue";

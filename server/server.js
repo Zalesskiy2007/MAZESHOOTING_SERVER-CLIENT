@@ -108,10 +108,23 @@ io.on("connection", (socket) => {
 
   socket.on("MTS:Player_Settings", (msg) => {
     msg = msg.split('|');
-    let playerConnect = Player(msg[0], 0, 0, 0, 100, 1, colors[Math.floor(Math.random() * colors.length)], socket, msg[1]);
-    players.push(playerConnect);
-    playerConnect.socket.emit("MFS:Get_Player", playerJSON(playerConnect));
-    reloadOtherPlayers();
+
+    let flag = 0;
+    for (let m = 0; m < players.length; m++) {
+      if (players[m].name === msg[0] && players[m].room === msg[1]) {
+        flag = 1;
+        break;
+      }
+    }
+
+    if (flag === 0) {
+      let playerConnect = Player(msg[0], 0, 0, 0, 100, 1, colors[Math.floor(Math.random() * colors.length)], socket, msg[1]);
+      players.push(playerConnect);
+      playerConnect.socket.emit("MFS:Get_Player", playerJSON(playerConnect));
+      reloadOtherPlayers();
+    } else {
+      socket.emit("MFS:Invalid_Name", msg.join("|"));
+    }
   });
 
   socket.on("MTS:Change_Player_State", (msg) => {
