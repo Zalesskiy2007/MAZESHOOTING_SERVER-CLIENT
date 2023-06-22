@@ -1,8 +1,7 @@
 // Primitives handle module
 import { mat4, vec3, vec2, vec4 } from "../../mth/mth.js";
-import { vertex, toArray, autoNormals } from "./vertex.js";
+import { vertex, toArray } from "./vertex.js";
 import * as mtl from "./res/material.js";
-// import * as rnd from "./render.js"
 import { gl } from "../../gl.js";
 
 // Primitive class
@@ -100,6 +99,13 @@ class _prim {
         window.anim.camera.loc.x,
         window.anim.camera.loc.y,
         window.anim.camera.loc.z
+      );
+    if ((loc = gl.getUniformLocation(progId, "CamDir")) != -1)
+      gl.uniform3f(
+        loc,
+        window.anim.camera.dir.x,
+        window.anim.camera.dir.y,
+        window.anim.camera.dir.z
       );
 
     gl.bindVertexArray(this.vA);

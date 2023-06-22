@@ -1,11 +1,11 @@
 // Math implementations file
 
 // Degrees to radians conversion
-function D2R(a) {
+export function D2R(a) {
   return a * (Math.PI / 180.0);
 }
 // Radians to degrees conversion
-function R2D(a) {
+export function R2D(a) {
   return a * (180.0 / Math.PI);
 }
 
@@ -503,6 +503,43 @@ class _mat4 {
 
     return this.mul(mr);
   }
+
+  setRotate(AngleInDegree, R) {
+    let a = AngleInDegree * Math.PI,
+      sine = Math.sin(a),
+      cosine = Math.cos(a);
+    let x = 0,
+      y = 0,
+      z = 1;
+    if (typeof R == "object")
+      if (R.length == 3) (x = R[0]), (y = R[1]), (z = R[2]);
+      else (x = R.x), (y = R.y), (z = R.z);
+    // Vector normalize
+    let len = x * x + y * y + z * z;
+    if (len != 0 && len != 1)
+      (len = Math.sqrt(len)), (x /= len), (y /= len), (z /= len);
+    this.m[0][0] = cosine + x * x * (1 - cosine);
+    this.m[0][1] = x * y * (1 - cosine) + z * sine;
+    this.m[0][2] = x * z * (1 - cosine) - y * sine;
+    this.m[0][3] = 0;
+    this.m[1][0] = y * x * (1 - cosine) - z * sine;
+    this.m[1][1] = cosine + y * y * (1 - cosine);
+    this.m[1][2] = y * z * (1 - cosine) + x * sine;
+    this.m[1][3] = 0;
+    this.m[2][0] = z * x * (1 - cosine) + y * sine;
+    this.m[2][1] = z * y * (1 - cosine) - x * sine;
+    this.m[2][2] = cosine + z * z * (1 - cosine);
+    this.m[2][3] = 0;
+    this.m[3][0] = 0;
+    this.m[3][1] = 0;
+    this.m[3][2] = 0;
+    this.m[3][3] = 1;
+    return this;
+  } // End of 'setRotate' function
+
+  rotate(AngleInDegree, R) {
+    return this.mul(mat4().setRotate(AngleInDegree, R));
+  } // End of 'rotate' function
 
   setView(Loc, At, Up1) {
     let Dir = At.sub(Loc).normalize(),

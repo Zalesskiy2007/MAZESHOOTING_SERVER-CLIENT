@@ -31,7 +31,37 @@ export function rayIntersectSphere(ray, sphere) {
   const d2 = orgCenter.length2() - t * t;
 
   if (orgCenter.dot(ray.dir) <= 0) return false;
-  if (d2 >= sphere.r) return false;
+  if (d2 >= sphere.r * sphere.r) return false;
 
   return true;
+}
+
+export function checkCollisionSphereAndSphere(pos1, rad1, pos2, rad2) {
+  if (Math.pow(pos2.x - pos1.x, 2) + Math.pow(pos2.y - pos1.y, 2) + Math.pow(pos2.z - pos1.z, 2) <= Math.pow(rad1 + rad2, 2)) {
+    return true;
+  }
+
+  return false;
+}
+
+export function checkCollisionSphereAndBox(bmin, bmax, c, r) {
+  let r2 = r * r;
+  let dmin = 0;
+
+  c = [c.x, c.y, c.z];
+  bmin = [bmin.x, bmin.y, bmin.x];
+  bmax = [bmax.x, bmax.y, bmax.z];
+
+  for (let i = 0; i < 3; i++) {
+    if (c[i] < bmin[i]) {
+      dmin += Math.pow(c[i] - bmin[i], 2);
+    } else if (c[i] > bmax[i]) {
+      dmin += Math.pow(c[i] - bmax[i], 2);
+    }
+  }
+
+  if (dmin <= r2) {
+    return true;
+  }
+  return false;
 }

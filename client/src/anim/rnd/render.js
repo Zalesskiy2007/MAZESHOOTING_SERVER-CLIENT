@@ -6,7 +6,8 @@ import * as shd from "./res/shader.js";
 import { prim } from "./primitive.js";
 import { mat4 } from "../../mth/mth.js";
 import { vec3 } from "../../mth/mth.js";
-import { gl } from "../../gl.js"
+import { canvas, gl } from "../../gl.js";
+import * as col from "../../mth/collision.js";
 
 
 export class Render {
@@ -15,12 +16,101 @@ export class Render {
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     this.shaderDefault = shd.shader("default");
+    this.shaderScope = shd.shader("scope");
   }
 
   resInit() {
     this.material = mtl.material();
+    this.materialScope = mtl.material(
+      "Scope material",
+      vec3(1, 0, 0),
+      vec3(1, 0, 0),
+      vec3(1, 0, 0),
+      30.0,
+      1,
+      null,
+      shd.shaders[1]
+    );
     this.texture = tex.texture();
+    const x = 0.01 * canvas.clientHeight / canvas.clientWidth;
+    const y = 0.01;
+    this.scopePrim = prim(
+      gl.TRIANGLE_STRIP,
+      new Float32Array([
+        -x,
+        y,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -x,
+        -y,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        x,
+        y,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        x,
+        -y,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+      ]),
+      null,
+      this.materialScope.mtlNo
+    );
     this.otherPrimitives = [];
+    //[bmin, bmax]
+    this.mazeH = 10;
+    this.mazeFloor = 0;
+    this.mazePos = [
+      [vec3(-9, this.mazeFloor, -7), vec3(-5, this.mazeH, -6)],
+      [vec3(-6, this.mazeFloor, -9), vec3(-5, this.mazeH, -7)],
+      [vec3(-4, this.mazeFloor, -2), vec3(1, this.mazeH, -2)],
+      [vec3(3, this.mazeFloor, -11), vec3(4, this.mazeH, -2)],
+      [vec3(4, this.mazeFloor, -3), vec3(9, this.mazeH, -2)],
+      [vec3(8, this.mazeFloor, -8), vec3(9, this.mazeH, -3)],
+      [vec3(9, this.mazeFloor, -8), vec3(11, this.mazeH, -7)],
+      [vec3(4, this.mazeFloor, -11), vec3(11, this.mazeH, -10)],
+      [vec3(6, this.mazeFloor, 5), vec3(7, this.mazeH, 10)],
+      [vec3(4, this.mazeFloor, 7), vec3(6, this.mazeH, 8)],
+      [vec3(7, this.mazeFloor, 7), vec3(9, this.mazeH, 8)],
+      [vec3(-5, this.mazeFloor, 7), vec3(-3, this.mazeH, 8)],
+      [vec3(-6, this.mazeFloor, 6), vec3(-5, this.mazeH, 9)],
+      [vec3(-8, this.mazeFloor, 8), vec3(-6, this.mazeH, 10)],
+      [vec3(-11, this.mazeFloor, 10), vec3(-6, this.mazeH, 12)],
+      [vec3(-12, this.mazeFloor, 10), vec3(-11, this.mazeH, 11)],
+    ];
 
     mtl.loadMtlLib();
 
@@ -93,6 +183,12 @@ export class Render {
     }
   }
 
+  checkCollisionWithOther() {
+    if (window.player !== null && this.playerPrimitive !== undefined && window.otherPlayers !== null) {
+      /**/
+    }
+  }
+
   drawSelf() {
     // Draw player ptimitive
     if (window.player !== null) {
@@ -133,10 +229,13 @@ export class Render {
 
     this.createSelfIfNotExists();
 
-    this.latentCamera();
-
+    // Draw players
     this.updatePlayers();
+    //this.checkCollisionWithOther();
     this.drawSelf();
     this.drawOther();
+
+    // Draw scope
+    this.scopePrim.draw();
   }
 }

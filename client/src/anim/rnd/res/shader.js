@@ -34,7 +34,7 @@ export class _shader {
     };
     shaders[shadersSize].name = this.name;
     shaders[shadersSize].program = this.program;
-    return shaders[shadersSize++];
+    shadersSize++;
   }
 }
 

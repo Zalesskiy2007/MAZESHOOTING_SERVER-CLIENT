@@ -7,11 +7,16 @@ export function main() {
   Promise.all([
     window.anim.render.shaderDefault.vertText,
     window.anim.render.shaderDefault.fragText,
+    window.anim.render.shaderScope.vertText,
+    window.anim.render.shaderScope.fragText,
   ]).then((res) => {
-    const vs = res[0];
-    const fs = res[1];
+    const vsd = res[0];
+    const fsd = res[1];
+    const vss = res[2];
+    const fss = res[3];
 
-    window.anim.render.shaderDefault.add(vs, fs);
+    window.anim.render.shaderDefault.add(vsd, fsd);
+    window.anim.render.shaderScope.add(vss, fss);
     window.anim.render.resInit();
 
     const draw = () => {

@@ -1,8 +1,18 @@
 import { io } from "socket.io-client";
 import { main } from "./src/main.js";
+import { canvas } from "./src/gl.js";
 
 window.socket = io();
 window.activeButtons = [];
+
+// Mouse data
+window.mouseX = 0;
+window.mouseXOld = 0;
+window.mouseDx = 0;
+window.mouseY = 0;
+window.mouseYOld = 0;
+window.mouseDy = 0;
+window.isClicked = false;
 
 function addInfoBlock() {
   let block = document.getElementById("wrap");
@@ -24,6 +34,17 @@ function addInfoBlock() {
                                               <div class="pers-stat">${window.otherPlayers[i].health}/100</div>
                                           </div>`);
     }
+  }
+}
+
+let curState = 0;
+function changeCursor() {
+  if (curState === 0) {
+    curState = 1;
+    document.body.style.cursor = "none";
+  } else {
+    curState = 0
+    document.body.style.cursor = "default";
   }
 }
 
@@ -92,14 +113,29 @@ async function mainClient() {
   }
 
   
-  document.addEventListener("keydown", function (event) {
+  document.addEventListener("keydown", (event) => {
     if (!window.activeButtons.includes(event.code))
       window.activeButtons.push(event.code);
+
+      if (event.code === "KeyQ") {
+        changeCursor();
+      }
   });
 
-  document.addEventListener("keyup", function (event) {
-    if (activeButtons.includes(event.code))
+  document.addEventListener("keyup", (event) => {
+    if (window.activeButtons.includes(event.code))
       window.activeButtons.splice(window.activeButtons.indexOf(event.code), 1);
+  });
+
+  document.addEventListener("mousemove", (event) => {
+    window.mouseX = event.clientX;
+    window.mouseY = event.clientY;
+  });
+  document.addEventListener("mousedown", () => {
+    window.isClicked = true;
+  });
+  document.addEventListener("mouseup", () => {
+    window.isClicked = false;
   });
 }
 

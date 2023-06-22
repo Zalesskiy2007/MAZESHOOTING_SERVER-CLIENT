@@ -67,7 +67,7 @@ class _material {
     if (prg == null || prg == undefined) {
       prg = shd.shaders[0].program;
     } else {
-      prg = shd.shaders[0].program; // TODO
+      prg = shd.shaders[mtlNo].program; // TODO
     }
     if (prg == 0) return 0;
     gl.useProgram(prg);
