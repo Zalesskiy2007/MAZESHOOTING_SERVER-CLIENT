@@ -7,8 +7,28 @@ import { prim } from "./primitive.js";
 import { mat4 } from "../../mth/mth.js";
 import { vec3 } from "../../mth/mth.js";
 import { canvas, gl } from "../../gl.js";
-import * as col from "../../mth/collision.js";
 
+export let walls = [];
+let mazeH = 10;
+let mazeFloor = 0;
+export let mazePos = [
+  [vec3(-9, mazeFloor, -7), vec3(-5, mazeH, -6)],
+  [vec3(-6, mazeFloor, -9), vec3(-5, mazeH, -7)],
+ // [vec3(-4, mazeFloor, -2), vec3(1, mazeH, 2)],
+  [vec3(3, mazeFloor, -11), vec3(4, mazeH, -2)],
+  [vec3(4, mazeFloor, -3), vec3(9, mazeH, -2)],
+  [vec3(8, mazeFloor, -8), vec3(9, mazeH, -3)],
+  [vec3(9, mazeFloor, -8), vec3(11, mazeH, -7)],
+  [vec3(4, mazeFloor, -11), vec3(11, mazeH, -10)],
+  [vec3(6, mazeFloor, 5), vec3(7, mazeH, 10)],
+  [vec3(4, mazeFloor, 7), vec3(6, mazeH, 8)],
+  [vec3(7, mazeFloor, 7), vec3(9, mazeH, 8)],
+  [vec3(-5, mazeFloor, 7), vec3(-3, mazeH, 8)],
+  [vec3(-6, mazeFloor, 6), vec3(-5, mazeH, 9)],
+  [vec3(-8, mazeFloor, 8), vec3(-6, mazeH, 10)],
+  [vec3(-11, mazeFloor, 10), vec3(-6, mazeH, 12)],
+  [vec3(-12, mazeFloor, 10), vec3(-11, mazeH, 11)],
+];
 
 export class Render {
   constructor() {
@@ -90,29 +110,15 @@ export class Render {
       this.materialScope.mtlNo
     );
     this.otherPrimitives = [];
-    //[bmin, bmax]
-    this.mazeH = 10;
-    this.mazeFloor = 0;
-    this.mazePos = [
-      [vec3(-9, this.mazeFloor, -7), vec3(-5, this.mazeH, -6)],
-      [vec3(-6, this.mazeFloor, -9), vec3(-5, this.mazeH, -7)],
-      [vec3(-4, this.mazeFloor, -2), vec3(1, this.mazeH, -2)],
-      [vec3(3, this.mazeFloor, -11), vec3(4, this.mazeH, -2)],
-      [vec3(4, this.mazeFloor, -3), vec3(9, this.mazeH, -2)],
-      [vec3(8, this.mazeFloor, -8), vec3(9, this.mazeH, -3)],
-      [vec3(9, this.mazeFloor, -8), vec3(11, this.mazeH, -7)],
-      [vec3(4, this.mazeFloor, -11), vec3(11, this.mazeH, -10)],
-      [vec3(6, this.mazeFloor, 5), vec3(7, this.mazeH, 10)],
-      [vec3(4, this.mazeFloor, 7), vec3(6, this.mazeH, 8)],
-      [vec3(7, this.mazeFloor, 7), vec3(9, this.mazeH, 8)],
-      [vec3(-5, this.mazeFloor, 7), vec3(-3, this.mazeH, 8)],
-      [vec3(-6, this.mazeFloor, 6), vec3(-5, this.mazeH, 9)],
-      [vec3(-8, this.mazeFloor, 8), vec3(-6, this.mazeH, 10)],
-      [vec3(-11, this.mazeFloor, 10), vec3(-6, this.mazeH, 12)],
-      [vec3(-12, this.mazeFloor, 10), vec3(-11, this.mazeH, 11)],
-    ];
 
     mtl.loadMtlLib();
+    for (let x = 0; x < mazePos.length; x++) {
+      mazePos[x][0] = mazePos[x][0].mul(5);
+      mazePos[x][0].y -= 3;
+      mazePos[x][1] = mazePos[x][1].mul(5);
+      walls.push(prim(gl.TRIANGLES, null, null, mtl.findMtlByName("Obsidian").mtlNo, x).box(mazePos[x][0], mazePos[x][1]));
+    }
+    this.floor = prim(gl.TRIANGLES, null, null, mtl.findMtlByName("Obsidian").mtlNo, x).box(vec3(-300, -6, -300), vec3(300, -3, 300));
 
     if (window.otherPlayers !== null) {
       for (let i = 0; i < window.otherPlayers.length; i++) {
@@ -183,9 +189,9 @@ export class Render {
     }
   }
 
-  checkCollisionWithOther() {
-    if (window.player !== null && this.playerPrimitive !== undefined && window.otherPlayers !== null) {
-      /**/
+  drawWalls() {
+    for (let x = 0; x < walls.length; x++) {
+      walls[x].draw();
     }
   }
 
@@ -227,11 +233,13 @@ export class Render {
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.enable(gl.DEPTH_TEST);
 
+
+    this.floor.draw();
+    this.drawWalls();
     this.createSelfIfNotExists();
 
     // Draw players
     this.updatePlayers();
-    //this.checkCollisionWithOther();
     this.drawSelf();
     this.drawOther();
 

@@ -49,7 +49,7 @@ export function checkCollisionSphereAndBox(bmin, bmax, c, r) {
   let dmin = 0;
 
   c = [c.x, c.y, c.z];
-  bmin = [bmin.x, bmin.y, bmin.x];
+  bmin = [bmin.x, bmin.y, bmin.z];
   bmax = [bmax.x, bmax.y, bmax.z];
 
   for (let i = 0; i < 3; i++) {

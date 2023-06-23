@@ -22,7 +22,7 @@ body{
     height: 50%;
 }
 
-#start{
+.but{
     color: aliceblue;
     background-color: #ffa13d;
     border: none;

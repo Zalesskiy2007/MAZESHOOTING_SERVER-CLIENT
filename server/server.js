@@ -147,6 +147,15 @@ io.on("connection", (socket) => {
 
     reloadPlayer(gang[0]);
     reloadPlayer(gang[1]);
+
+    if (gang[1].health <= 0) {
+      for (let x = 0; x < players.length; x++) {
+        if (players[x].socket.id === gang[1].id) {
+          players[x].socket.emit("MFS:Game_Over");
+          break;
+        }
+      }
+    }
     reloadOtherPlayers();
   });
 

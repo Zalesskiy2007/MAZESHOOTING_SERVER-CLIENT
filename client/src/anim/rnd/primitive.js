@@ -1,8 +1,8 @@
 // Primitives handle module
 import { mat4, vec3, vec2, vec4 } from "../../mth/mth.js";
-import { vertex, toArray } from "./vertex.js";
 import * as mtl from "./res/material.js";
 import { gl } from "../../gl.js";
+import { vertex, toArray, getVertexArray, autoNormals } from "./vertex.js";
 
 // Primitive class
 class _prim {
@@ -225,6 +225,50 @@ class _prim {
       this.id
     );
   }
+
+  box(bMin, bMax) {
+    const positions = [
+      bMax.x, bMax.y, bMin.z, 
+      bMax.x, bMax.y, bMax.z, 
+      bMax.x, bMin.y, bMax.z, 
+      bMax.x, bMin.y, bMin.z, 
+      bMin.x, bMax.y, bMax.z, 
+      bMin.x, bMax.y, bMin.z, 
+      bMin.x, bMin.y, bMin.z, 
+      bMin.x, bMin.y, bMax.z, 
+      bMin.x, bMax.y, bMax.z, 
+      bMax.x, bMax.y, bMax.z, 
+      bMax.x, bMax.y, bMin.z, 
+      bMin.x, bMax.y, bMin.z,
+      bMin.x, bMin.y, bMin.z,
+      bMax.x, bMin.y, bMin.z, 
+      bMax.x, bMin.y, bMax.z, 
+      bMin.x, bMin.y, bMax.z, 
+      bMax.x, bMax.y, bMax.z, 
+      bMin.x, bMax.y, bMax.z, 
+      bMin.x, bMin.y, bMax.z, 
+      bMax.x, bMin.y, bMax.z, 
+      bMin.x, bMax.y, bMin.z,
+      bMax.x, bMax.y, bMin.z, 
+      bMax.x, bMin.y, bMin.z, 
+      bMin.x, bMin.y, bMin.z,
+    ]
+    const indices = [
+      0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7, 8, 9, 10, 8, 10, 11, 12, 13, 14,
+      12, 14, 15, 16, 17, 18, 16, 18, 19, 20, 21, 22, 20, 22, 23,
+    ]
+
+    let boxVertexArray = getVertexArray(positions, null, null, null);
+    autoNormals(boxVertexArray, indices);
+
+    console.log(boxVertexArray);
+
+    return new prim(gl.TRIANGLES,
+      toArray(boxVertexArray),
+      indices,
+      this.mtlNo,
+      this.id);
+  }  
 }
 
 export function prim(...args) {

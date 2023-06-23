@@ -37,17 +37,6 @@ function addInfoBlock() {
   }
 }
 
-let curState = 0;
-function changeCursor() {
-  if (curState === 0) {
-    curState = 1;
-    document.body.style.cursor = "none";
-  } else {
-    curState = 0
-    document.body.style.cursor = "default";
-  }
-}
-
 async function mainClient() {
   // client-side
   window.socket.on("connect", () => {
@@ -87,6 +76,10 @@ async function mainClient() {
     console.log(window.socket.id); // undefined
   });
 
+  window.socket.on("MFS:Game_Over", () => {
+    window.location.reload();
+  });
+
   //CREATE PLAYER
   document.getElementById("start").onclick = () => {
     if (window.player === null) {
@@ -116,10 +109,10 @@ async function mainClient() {
   document.addEventListener("keydown", (event) => {
     if (!window.activeButtons.includes(event.code))
       window.activeButtons.push(event.code);
+  });
 
-      if (event.code === "KeyQ") {
-        changeCursor();
-      }
+  document.getElementById("cursor").addEventListener("click", async () => {
+    await canvas.requestPointerLock({ unadjustedMovement: true });
   });
 
   document.addEventListener("keyup", (event) => {
@@ -128,8 +121,8 @@ async function mainClient() {
   });
 
   document.addEventListener("mousemove", (event) => {
-    window.mouseX = event.clientX;
-    window.mouseY = event.clientY;
+    window.mouseDx = event.movementX;
+    window.mouseDy = event.movementY;
   });
   document.addEventListener("mousedown", () => {
     window.isClicked = true;

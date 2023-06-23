@@ -3,6 +3,7 @@ import { vec3 } from "../mth/vec3.js";
 import { mat4 } from "../mth/mat4.js";
 import { rayIntersectSphere, ray, sphere } from "../mth/collision.js";
 import * as col from "../mth/collision.js";
+import {walls, mazePos} from "../anim/rnd/render.js";
 
 class _control {
   constructor() {
@@ -15,14 +16,6 @@ class _control {
     this.speed = 53.0;
   }
   response() {
-    // Player control
-    window.mouseDx = window.mouseX - window.mouseXOld;
-    window.mouseDy = window.mouseY - window.mouseYOld;
-    window.mouseDz = window.activeWheel - window.activeWheelOld;
-    window.activeWheelOld = window.activeWheel;
-    window.mouseXOld = window.mouseX;
-    window.mouseYOld = window.mouseY;
-
     this.dir = this.dir
       .mulMatr(
         mat4()
@@ -51,13 +44,13 @@ class _control {
       if (window.activeButtons.includes("KeyD")) {
         this.deltaPos = this.dir
           .cross(this.norm)
-          .mul(window.anim.timer.globalDeltaTime * this.speed);
+          .mul(window.anim.timer.globalDeltaTime * this.speed / 3.0);
         this.deltaPos.y = 0;
       }
       if (window.activeButtons.includes("KeyA")) {
         this.deltaPos = this.dir
           .cross(this.norm)
-          .mul(-window.anim.timer.globalDeltaTime * this.speed);
+          .mul(-window.anim.timer.globalDeltaTime * this.speed / 3.0);
         this.deltaPos.y = 0;
       }
       if (window.isClicked) {
@@ -88,6 +81,7 @@ class _control {
 
       let flag = 0;
 
+      //check collision player-other players
       if (window.otherPlayers !== null) {
         for (let i = 0; i < window.otherPlayers.length; i++) {
           if (col.checkCollisionSphereAndSphere(vec3(this.pos.x, this.pos.y, this.pos.z), 3, vec3(window.otherPlayers[i].x, window.otherPlayers[i].y, window.otherPlayers[i].z), 3)) {
@@ -97,6 +91,19 @@ class _control {
               } else {
                 this.pos = this.pos.sub(this.deltaPos);
               }
+            }
+          }
+        }
+      }
+
+      //check collision player-walls
+      for (let i = 0; i < walls.length; i++) {
+        if (col.checkCollisionSphereAndBox(mazePos[i][0], mazePos[i][1], vec3(this.pos.x, this.pos.y, this.pos.z), 3)) {
+          while(col.checkCollisionSphereAndBox(mazePos[i][0], mazePos[i][1], vec3(this.pos.x, this.pos.y, this.pos.z), 3)) {
+            if (Math.abs(this.deltaPos.x) === 0 && Math.abs(this.deltaPos.y) === 0 && Math.abs(this.deltaPos.z) === 0) {
+              this.deltaPos.x = 1;
+            } else {
+              this.pos = this.pos.sub(this.deltaPos);
             }
           }
         }
@@ -135,56 +142,11 @@ class _control {
         JSON.stringify(window.player)
       );
     }
+    window.mouseDx = 0;
+    window.mouseDy = 0;
   }
 }
 
 export function control(...args) {
   return new _control(...args);
 }
-
-////////////////////// Camera
-// this.dist = window.anim.camera.at.sub(window.anim.camera.loc).length();
-// this.cosT =
-//   (window.anim.camera.loc.y - window.anim.camera.at.y) / this.dist;
-// this.sinT = Math.sqrt(1.0 - this.cosT * this.cosT);
-// this.plen = this.dist * this.sinT;
-// this.cosP =
-//   (window.anim.camera.loc.z - window.anim.camera.at.z) / this.plen;
-// this.sinP =
-//   (window.anim.camera.loc.x - window.anim.camera.at.x) / this.plen;
-// this.azimuth = R2D(Math.atan2(this.sinP, this.cosP));
-// this.elevator = R2D(Math.atan2(this.sinT, this.cosT));
-
-// this.azimuth += window.anim.timer.globalDeltaTime * 10 * window.mouseDx;
-// this.elevator += window.anim.timer.globalDeltaTime * 10 * window.mouseDy;
-//   console.log("X: " + e.clientX);
-//   console.log("Y: " + e.clientY);
-// console.log("a: " + this.azimuth);
-// console.log("e: " + this.elevator);
-// if (this.elevator < 0.08) this.elevator = 0.08;
-// else if (this.elevator > 178.9) this.elevator = 178.9;
-
-// document.addEventListener("wheel", (e) => {
-//   this.dist += window.anim.timer.globalDeltaTime * e.deltaY;
-// });
-// this.dist += window.anim.timer.globalDeltaTime * 8 * window.mouseDz;
-// if (this.dist < 0.1) this.dist = 0.1;
-// window.anim.camera.loc = window.anim.camera.loc.add(
-//   window.anim.camera.right.add(window.anim.camera.up)
-// );
-
-// console.log("dist :" + this.dist);
-// console.log("azimuth: " + this.azimuth);
-// console.log("elevator: " + this.elevator);
-// window.anim.camera.set(
-//   vec3(0, this.dist, 0).pointTransform(
-//     mat4().rotateX(this.elevator).mul(mat4().rotateY(this.azimuth))
-//   ),
-//   window.anim.camera.at,
-//   vec3(0, 1, 0)
-// );
-// window.anim.camera.dir = vec3(
-//   Math.cos(D2R(this.azimuth)) * Math.cos(D2R(this.elevator)),
-//   Math.sin(D2R(this.elevator)),
-//   Math.sin(D2R(this.azimuth)) * Math.cos(D2R(this.elevator))
-// ).normalize();

@@ -16,7 +16,11 @@ uniform vec3 CamDir;
 // float Ph = 83.2;
 
 vec3 Shade(vec3 P, vec3 N) {
-  vec3 L = normalize(vec3(-CamDir)); // Light direction
+  vec3 L;
+  if (Ka == vec3(0.05375, 0.05, 0.06625))
+    L = normalize(vec3(2, 8, 4)); // Light direction
+  else
+    L = normalize(vec3(-CamDir)); // Light direction
   vec3 LC = vec3(1, 1, 1);
   vec3 color;
   vec3 V = normalize(P - CamLoc);
