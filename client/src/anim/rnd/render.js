@@ -28,6 +28,11 @@ export let mazePos = [
   [vec3(-8, mazeFloor, 8), vec3(-6, mazeH, 10)],
   [vec3(-11, mazeFloor, 10), vec3(-6, mazeH, 12)],
   [vec3(-12, mazeFloor, 10), vec3(-11, mazeH, 11)],
+
+  [vec3(-60, mazeFloor, -60), vec3(-60, mazeH, 60)],
+  [vec3(-60, mazeFloor, -60), vec3(60, mazeH, -60)],
+  [vec3(60, mazeFloor, -60), vec3(60, mazeH, 60)],
+  [vec3(-60, mazeFloor, 60), vec3(60, mazeH, 60)],
 ];
 
 export class Render {
